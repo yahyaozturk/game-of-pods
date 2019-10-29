@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gop-fileserver
+  labels:
+    app: fs
+spec:
+  containers:
+  - name: fs
+    image: kodekloud/fileserver
+    volumeMounts:
+      - mountPath: /web
+        name: data-store
+  volumes:
+  - name: data-store
+    persistentVolumeClaim:
+      claimName: data-pvc
