@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal
+  labels:
+    app: drupal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drupal
+  template:
+    metadata:
+      labels:
+        app: drupal
+    spec:
+      containers:
+      - name: drupal
+        image: drupal:8.6
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: /var/www/html/modules
+            name: drupal-data
+            subPath: modules
+          - mountPath: /var/www/html/profiles
+            name: drupal-data
+            subPath: profiles
+          - mountPath: /var/www/html/sites
+            name: drupal-data
+            subPath: sites
+          - mountPath: /var/www/html/themes
+            name: drupal-data
+            subPath: themes
+      initContainers:
+      - name: init-sites-volume
+        image: drupal:8.6
+        command: ["/bin/bash", "-c" ]
+        args: ["cp -r /var/www/html/sites/ /data/; chown www-data:www-data /data/ -R"]
+        volumeMounts:
+        - name: drupal-data
+          mountPath: /data
+      volumes:
+      - name: drupal-data
+        persistentVolumeClaim:
+          claimName: drupal-pvc
