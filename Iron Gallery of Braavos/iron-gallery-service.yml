@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: iron-gallery-service
+spec:
+  selector:
+    run: iron-gallery
+  ports:
+    - protocol: TCP
+      port: 80

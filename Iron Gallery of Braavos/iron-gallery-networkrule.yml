@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: iron-gallery-firewall
+spec:
+  podSelector:
+    matchLabels:
+      db: mariadb
+  ingress:
+  - ports:
+    - port: 3306
+    from:
+    - podSelector:
+        matchLabels:
+          run: iron-gallery
